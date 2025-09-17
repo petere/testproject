@@ -1,0 +1,30 @@
+env:
+  DEBIAN_FRONTEND: noninteractive
+  LANG: C
+  PGVERSION: 13
+
+task:
+  name: Linux (Debian/Ubuntu)
+  matrix:
+    - container:
+        image: ubuntu:24.04
+    - container:
+        image: ubuntu:22.04
+    - container:
+        image: ubuntu:20.04
+    - container:
+        image: debian:trixie
+    - container:
+        image: debian:bookworm
+    - container:
+        image: debian:bullseye
+  setup_script:
+    - apt-get update
+    - apt-get -y install postgresql-common
+    - /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+    - apt-get update
+    - pkgs="postgresql-$PGVERSION"
+    - apt-get -y --no-install-recommends install $pkgs
+  build_script:
+    - echo "Hello World"
+    - /usr/lib/postgresql/$PGVERSION/bin/postgres --version
